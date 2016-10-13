@@ -1,29 +1,29 @@
 ---
 # Channel of Telegraf to install
-telegraf_install_version: stable
+telegraf_install_version:
+telegraf_install_url: https://dl.influxdata.com/telegraf/releases/telegraf_1.0.1_amd64.deb
 
 # Configuration Variables
 telegraf_tags:
 
 telegraf_agent_interval: 10s
 telegraf_round_interval: "true"
-telegraf_metric_batch_size: "1000"
-telegraf_metric_buffer_limit: "10000"
+telegraf_metric_batch_size: "4000"
+telegraf_metric_buffer_limit: "40000"
 
 telegraf_collection_jitter: 0s
-telegraf_flush_interval: 10s
-telegraf_flush_jitter: 0s
+telegraf_flush_interval: 20s
+telegraf_flush_jitter: 4s
 telegraf_debug: "false"
 telegraf_quiet: "false"
 telegraf_hostname:
 telegraf_omit_hostname: "false"
-telegraf_install_url:
 
 telegraf_influxdb_urls:
   - http://localhost:8086
 telegraf_influxdb_database: telegraf
-telegraf_influxdb_precision: s
-telegraf_influxdb_retention_policy: autogen
+telegraf_influxdb_precision: us
+telegraf_influxdb_retention_policy: default
 telegraf_influxdb_write_consistency: any
 telegraf_influxdb_ssl_ca:
 telegraf_influxdb_ssl_cert:
@@ -37,31 +37,25 @@ telegraf_influxdb_user_agent:
 telegraf_influxdb_udp_payload:
 
 telegraf_plugins:
-  - name: mem
-  - name: system
   - name: cpu
     options:
-      percpu: "true"
+      percpu: "false"
       totalcpu: "true"
       fielddrop:
         - "time_*"
   - name: disk
     options:
-      mountpoints:
-        - "/"
+      ignore_fs:
+        - "tmpfs"
+        - "devtmpfs"
   - name: diskio
+  - name: kernel
+  - name: mem
+  - name: processes
+  - name: swap
+  - name: system
+  - name: udp_listener
     options:
-      skip_serial_number: "true"
-  - name: procstat
-    options:
-      exe: "influxd"
-      prefix: "influxdb"
-  - name: procstat
-    options:
-      pid_file: "/var/lib/neo4j/data/neo4j-service.pid"
-      prefix: "neo4j_proc"
-
-  - name: net
-    options:
-      interfaces:
-        - "eth0"
+      service_address: ":8092"
+      allowed_pending_messages: 10000
+      data_format: "influx"
