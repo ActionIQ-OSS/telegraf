@@ -1,6 +1,4 @@
 ---
-# Channel of Telegraf to install
-telegraf_install_version:
 telegraf_install_url: https://dl.influxdata.com/telegraf/releases/telegraf_1.0.1_amd64.deb
 
 # Configuration Variables
