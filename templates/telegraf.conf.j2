@@ -78,6 +78,9 @@
 
 [outputs]
 
+[[outputs.prometheus_client]]
+  listen = "0.0.0.0:9273"
+
 # Configuration for influxdb server to send metrics to
 [[outputs.influxdb]]
   # The full HTTP or UDP endpoint URL for your InfluxDB instance.
