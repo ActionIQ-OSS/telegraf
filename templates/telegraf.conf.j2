@@ -62,12 +62,8 @@
   ## Run telegraf in quiet mode
   quiet = {{ telegraf_quiet }}
 
-  # Override default hostname, if empty use os.Hostname()
-{% if telegraf_hostname is defined and telegraf_hostname != None %}
+  # Override default hostname
   hostname = "{{ telegraf_hostname }}"
-{% else %}
-  hostname = "{{ ansible_hostname }}"
-{% endif %}
 
   ## If set to true, do no set the "host" tag in the telegraf agent.
   omit_hostname = {{ telegraf_omit_hostname }}
