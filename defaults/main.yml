@@ -4,13 +4,13 @@ telegraf_install_url: https://dl.influxdata.com/telegraf/releases/telegraf_1.0.1
 # Configuration Variables
 telegraf_tags:
 
-telegraf_agent_interval: 10s
+telegraf_agent_interval: 60s
 telegraf_round_interval: "true"
-telegraf_metric_batch_size: "4000"
-telegraf_metric_buffer_limit: "40000"
+telegraf_metric_batch_size: "1000"
+telegraf_metric_buffer_limit: "6000"
 
 telegraf_collection_jitter: 0s
-telegraf_flush_interval: 20s
+telegraf_flush_interval: 60s
 telegraf_flush_jitter: 4s
 telegraf_debug: "false"
 telegraf_quiet: "false"
@@ -28,7 +28,7 @@ telegraf_influxdb_ssl_cert:
 telegraf_influxdb_ssl_key:
 telegraf_influxdb_insecure_skip_verify:
 
-telegraf_influxdb_timeout: 5s
+telegraf_influxdb_timeout: 30s
 telegraf_influxdb_username:
 telegraf_influxdb_password:
 telegraf_influxdb_user_agent:
