@@ -26,6 +26,11 @@
    {{ key }} = "{{ value }}"
 {% endfor %}
 {% endif %}
+{% if telegraf_aws_tags == true and ec2_tags is defined and ec2_tags != None %}
+{% for key, value in ec2_tags.tags.iteritems()%}
+   {{telegraf_aws_tags_prefix}}{{ key }} = "{{ value }}"
+{% endfor %}
+{% endif %}
 
 # Configuration for telegraf agent
 [agent]
@@ -129,8 +134,6 @@
   # insecure_skip_verify = telegraf_influxdb_insecure_skip_verify
 {% endif %}
 
-
-
 ###############################################################################
 #                                  PLUGINS                                    #
 ###############################################################################
@@ -141,7 +144,11 @@
 {% for key, value in plugin.options.iteritems() %}
 {% if value is not mapping %}
 {% if value is sequence and value is not string %}
+{% if value[0] is number %}
+    {{ key }} = [ {{ value|join(', ') }} ]
+{% else %}
     {{ key }} = [ "{{ value|join('", "') }}" ]
+{% endif %}
 {% else %}
 {% if value == "true" or value == "false" or value is number %}
     {{ key }} = {{ value }}
@@ -156,7 +163,11 @@
     [inputs.{{ plugin.name }}.{{ key }}]
 {% for lv2_key, lv2_value in value.iteritems() %}
 {% if lv2_value is sequence and lv2_value is not string %}
+{% if lv2_value[0] is number %}
+      {{ lv2_key }} = [ {{ lv2_value|join(', ') }} ]
+{% else %}
       {{ lv2_key }} = [ "{{ lv2_value|join('", "') }}" ]
+{% endif %}
 {% else %}
 {% if lv2_value == "true" or lv2_value == "false" or lv2_value is number %}
       {{ lv2_key }} = {{ lv2_value }}

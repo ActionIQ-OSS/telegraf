@@ -6,6 +6,7 @@ is_vagrant: no
 
 # If yes, service will be started. Will not be started if set to no.
 telegraf_start_service: yes
+telegraf_start_delay: 6
 
 # If yes, will overwrite the packaged configuration with an Asnible/jinja2 template
 telegraf_template_configuration: yes
@@ -13,7 +14,3 @@ telegraf_template_configuration: yes
 # Path for finding Telegraf data. Added for backwards-compatibility.
 telegraf_binary_path: /usr/bin/telegraf
 telegraf_configuration_dir: /etc/telegraf
-
-# The user and group telegraf should run under (should be set to telegraf unless needed otherwise)
-telegraf_runas_user: telegraf
-telegraf_runas_group: telegraf
