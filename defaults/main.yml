@@ -1,5 +1,5 @@
 ---
-telegraf_install_url: https://dl.influxdata.com/telegraf/releases/telegraf_1.0.1_amd64.deb
+telegraf_install_version: stable
 
 # The user and group telegraf should run under (should be set to telegraf unless needed otherwise)
 telegraf_runas_user: telegraf
@@ -55,6 +55,8 @@ telegraf_plugins_base:
         - "tmpfs"
         - "devtmpfs"
   - name: diskio
+    options:
+      skip_serial_number: "true"
   - name: kernel
   - name: processes
   - name: swap
@@ -72,7 +74,6 @@ telegraf_plugins_base:
     options:
       pid_file: "/var/lib/neo4j/data/neo4j-service.pid"
       prefix: "neo4j_proc"
-
   - name: net
     options:
       interfaces:
