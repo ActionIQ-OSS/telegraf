@@ -15,6 +15,7 @@
   apt_key:
     url: "{{ telegraf_influxdata_base_url }}/influxdb.key"
     state: present
+    validate_certs: no
   when: telegraf_install_url is not defined or telegraf_install_url == None
 
 - name: Add InfluxData repository [Debian/Ubuntu]
