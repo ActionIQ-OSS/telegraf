@@ -11,6 +11,14 @@
     - curl
     - apt-transport-https
 
+- name: Install any pip dependencies [Debian/Ubuntu]
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - pyOpenSSL
+    - ndg-httpsclient
+    - pyasn1
+
 - name: Import InfluxData GPG signing key [Debian/Ubuntu]
   apt_key:
     url: "{{ telegraf_influxdata_base_url }}/influxdb.key"
