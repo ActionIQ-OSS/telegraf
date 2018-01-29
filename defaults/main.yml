@@ -60,10 +60,9 @@ telegraf_plugins_base:
   - name: kernel
   - name: processes
   - name: swap
-  - name: udp_listener
+  - name: socket_listener
     options:
-      service_address: ":8092"
-      allowed_pending_messages: 10000
+      service_address: "udp://:8092"
       data_format: "influx"
   - name: net
     options:
