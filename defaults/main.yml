@@ -40,6 +40,8 @@ telegraf_influxdb_password:
 telegraf_influxdb_user_agent:
 telegraf_influxdb_udp_payload:
 
+telegraf_prometheus_metrics_filtered: []
+
 telegraf_plugins_base:
   - name: mem
   - name: system

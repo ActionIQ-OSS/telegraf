@@ -81,6 +81,7 @@
 
 [[outputs.prometheus_client]]
   listen = "0.0.0.0:9273"
+  namedrop = [ "{{ telegraf_prometheus_metrics_filtered|join('", "') }}" ]
 
 # Configuration for influxdb server to send metrics to
 [[outputs.influxdb]]
