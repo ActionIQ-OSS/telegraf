@@ -79,9 +79,11 @@
 
 [outputs]
 
+# TODO: make output templating more like input templating
+
 [[outputs.prometheus_client]]
   listen = "0.0.0.0:9273"
-  namedrop = [ "{{ telegraf_prometheus_metrics_filtered|join('", "') }}" ]
+  namedrop = [ "{{ telegraf_metrics_filtered|join('", "') }}" ]
 
 # Configuration for influxdb server to send metrics to
 [[outputs.influxdb]]
@@ -107,6 +109,7 @@
   # Connection timeout (for the connection with InfluxDB), formatted as a string.
   # If not provided, will default to 0 (no timeout)
   timeout = "{{ telegraf_influxdb_timeout }}"
+  namedrop = [ "{{ telegraf_metrics_filtered|join('", "') }}" ]
 {% if telegraf_influxdb_username is defined and telegraf_influxdb_username != None %}
   username = "{{ telegraf_influxdb_username }}"
 {% endif %}
