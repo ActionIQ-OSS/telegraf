@@ -45,6 +45,9 @@ telegraf_metrics_filtered: []
 telegraf_plugins_base:
   - name: mem
   - name: system
+  - name: procstat
+    options:
+      pattern: "%"
   - name: cpu
     options:
       percpu: "false"
