@@ -85,11 +85,11 @@
   listen = "0.0.0.0:9273"
   namedrop = [ "{{ telegraf_metrics_filtered|join('", "') }}" ]
 
-# Configuration for influxdb server to send metrics to
-[[outputs.influxdb]]
 # Check if this has been enabled or disabled before continuing
 {% if influxdb_enabled is not defined or influxdb_enabled != "false" %}
 
+# Configuration for influxdb server to send metrics to
+[[outputs.influxdb]]
   # The full HTTP or UDP endpoint URL for your InfluxDB instance.
   # Multiple urls can be specified but it is assumed that they are part of the same
   # cluster, this means that only ONE of the urls will be written to each interval.
@@ -140,6 +140,7 @@
 {% if telegraf_influxdb_insecure_skip_verify is defined and telegraf_influxdb_insecure_skip_verify != None %}
   # insecure_skip_verify = telegraf_influxdb_insecure_skip_verify
 {% endif %}
+
 {% endif %}
 
 ###############################################################################
