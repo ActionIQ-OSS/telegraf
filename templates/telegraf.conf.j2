@@ -84,6 +84,7 @@
 [[outputs.prometheus_client]]
   listen = "0.0.0.0:9273"
   namedrop = [ "{{ telegraf_metrics_filtered|join('", "') }}" ]
+  string_as_label = false
 
 # Check if this has been enabled or disabled before continuing
 {% if outputs_influxdb_enabled is not defined or outputs_influxdb_enabled != "false" %}
