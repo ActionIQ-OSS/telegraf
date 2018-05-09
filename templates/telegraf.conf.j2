@@ -87,7 +87,7 @@
   namespace = "{{ outputs_cloudwatch_namespace }}"
   access_key = "{{ outputs_cloudwatch_access_key }}"
   secret_key = "{{ outputs_cloudwatch_secret_key }}"
-  namedrop = [ "{{ outputs_cloudwatch_namedrop|join('", "') }}" ]
+  namepass = [ "{{ outputs_cloudwatch_namepass|join('", "') }}" ]
 {% endif %}
 
 [[outputs.prometheus_client]]
