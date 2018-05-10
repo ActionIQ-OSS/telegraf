@@ -81,6 +81,15 @@
 
 # TODO: make output templating more like input templating
 
+{% if outputs_cloudwatch_enabled is defined and outputs_cloudwatch_enabled != "false" %}
+[[outputs.cloudwatch]]
+  region = "{{ outputs_cloudwatch_region }}"
+  namespace = "{{ outputs_cloudwatch_namespace }}"
+  access_key = "{{ outputs_cloudwatch_access_key }}"
+  secret_key = "{{ outputs_cloudwatch_secret_key }}"
+  namepass = [ "{{ outputs_cloudwatch_namepass|join('", "') }}" ]
+{% endif %}
+
 [[outputs.prometheus_client]]
   listen = "0.0.0.0:9273"
   namedrop = [ "{{ telegraf_metrics_filtered|join('", "') }}" ]
