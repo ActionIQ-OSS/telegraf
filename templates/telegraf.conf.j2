@@ -88,6 +88,7 @@
   access_key = "{{ outputs_cloudwatch_access_key }}"
   secret_key = "{{ outputs_cloudwatch_secret_key }}"
   namepass = [ "{{ outputs_cloudwatch_namepass|join('", "') }}" ]
+  taginclude = [ "{{ outputs_cloudwatch_taginclude|join('", "') }}" ]
 {% endif %}
 
 [[outputs.prometheus_client]]
