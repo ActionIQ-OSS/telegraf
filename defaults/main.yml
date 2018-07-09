@@ -73,6 +73,7 @@ telegraf_plugins_base:
     options:
       interfaces:
         - "eth0"
+  - name: linux_sysctl_fs
 
 telegraf_plugins: "{{ telegraf_plugins_base }} + {{ telegraf_plugins_extra | default([]) }}"
 
