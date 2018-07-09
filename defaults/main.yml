@@ -47,7 +47,8 @@ telegraf_plugins_base:
   - name: system
   - name: procstat
     options:
-      pattern: "%"
+      pattern: "java|python"
+      pid_tag: "true"
   - name: cpu
     options:
       percpu: "false"
