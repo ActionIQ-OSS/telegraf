@@ -1,5 +1,5 @@
 ---
-telegraf_install_version: stable
+telegraf_install_version: 1.10.2
 
 # The user and group telegraf should run under (should be set to telegraf unless needed otherwise)
 telegraf_runas_user: telegraf
@@ -75,6 +75,14 @@ telegraf_plugins_base:
       interfaces:
         - "eth0"
   - name: linux_sysctl_fs
+
+telegraf_processors:
+  - processor: strings
+  - processor: strings.replace
+    config:
+      - measurement = "*"
+      - old = ":"
+      - new = ":"
 
 telegraf_plugins: "{{ telegraf_plugins_base }} + {{ telegraf_plugins_extra | default([]) }}"
 
