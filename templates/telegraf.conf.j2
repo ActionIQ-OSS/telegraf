@@ -204,3 +204,18 @@
 ###############################################################################
 #                              service PLUGINS                                #
 ###############################################################################
+
+###############################################################################
+#                                  PROCESSORS                                    #
+###############################################################################
+
+{% if telegraf_processors is defined and telegraf_processors is iterable %}
+{% for processor_plugin in telegraf_processors %}
+[[processors.{{ processor_plugin.processor }}]]
+{% if processor_plugin.config is defined and processor_plugin.config is iterable %}
+{% for configs in processor_plugin.config %}
+    {{ configs }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
