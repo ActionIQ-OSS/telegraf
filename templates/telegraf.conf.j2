@@ -79,80 +79,48 @@
 
 [outputs]
 
-# TODO: make output templating more like input templating
-
-{% if outputs_cloudwatch_enabled is defined and outputs_cloudwatch_enabled != "false" %}
-[[outputs.cloudwatch]]
-  region = "{{ outputs_cloudwatch_region }}"
-  namespace = "{{ outputs_cloudwatch_namespace }}"
-  access_key = "{{ outputs_cloudwatch_access_key }}"
-  secret_key = "{{ outputs_cloudwatch_secret_key }}"
-  namepass = [ "{{ outputs_cloudwatch_namepass|join('", "') }}" ]
-  taginclude = [ "{{ outputs_cloudwatch_taginclude|join('", "') }}" ]
+{% for output in telegraf_outputs %}
+[[outputs.{{ output.name }}]]
+{% if output.options is defined %}
+{% for key, value in output.options.iteritems() %}
+{% if value is not mapping %}
+{% if value is sequence and value is not string %}
+{% if value[0] is number %}
+    {{ key }} = [ {{ value|join(', ') }} ]
+{% else %}
+    {{ key }} = [ "{{ value|join('", "') }}" ]
 {% endif %}
-
-[[outputs.prometheus_client]]
-  listen = "0.0.0.0:9273"
-  namedrop = [ "{{ telegraf_metrics_filtered|join('", "') }}" ]
-  string_as_label = false
-
-# Check if this has been enabled or disabled before continuing
-{% if outputs_influxdb_enabled is not defined or outputs_influxdb_enabled != "false" %}
-
-# Configuration for influxdb server to send metrics to
-[[outputs.influxdb]]
-  # The full HTTP or UDP endpoint URL for your InfluxDB instance.
-  # Multiple urls can be specified but it is assumed that they are part of the same
-  # cluster, this means that only ONE of the urls will be written to each interval.
-  # urls = ["udp://localhost:8089"] # UDP endpoint example
-  urls = [ "{{ telegraf_influxdb_urls|join('","') }}" ] # required
-  # The target database for metrics (telegraf will create it if not exists)
-  database = "{{ telegraf_influxdb_database }}" # required
-  # Precision of writes, valid values are n, u, ms, s, m, and h
-  # note: using second precision greatly helps InfluxDB compression
-  precision = "{{ telegraf_influxdb_precision }}"
-
-  ## Retention policy to write to.
-  retention_policy = "{{ telegraf_influxdb_retention_policy }}"
-  ## Write consistency (clusters only), can be: "any", "one", "quorom", "all"
-  write_consistency = "{{ telegraf_influxdb_write_consistency }}"
-
-  # Connection timeout (for the connection with InfluxDB), formatted as a string.
-  # If not provided, will default to 0 (no timeout)
-  timeout = "{{ telegraf_influxdb_timeout }}"
-  namedrop = [ "{{ telegraf_metrics_filtered|join('", "') }}" ]
-{% if telegraf_influxdb_username is defined and telegraf_influxdb_username != None %}
-  username = "{{ telegraf_influxdb_username }}"
+{% else %}
+{% if value == "true" or value == "false" or value is number %}
+    {{ key }} = {{ value }}
+{% else %}
+    {{ key }} = "{{ value }}"
 {% endif %}
-{% if telegraf_influxdb_password is defined and telegraf_influxdb_password != None %}
-  password = "{{ telegraf_influxdb_password }}"
 {% endif %}
-  # Set the user agent for HTTP POSTs (can be useful for log differentiation)
-{% if telegraf_influxdb_user_agent is defined and telegraf_influxdb_user_agent != None %}
-  user_agent = "{{ telegraf_influxdb_user_agent }}"
 {% endif %}
-  # Set UDP payload size, defaults to InfluxDB UDP Client default (512 bytes)
-{% if telegraf_influxdb_udp_payload is defined and telegraf_influxdb_udp_payload != None %}
-  udp_payload = {{ telegraf_influxdb_udp_payload }}
+{% endfor %}
+{% for key, value in output.options.iteritems() %}
+{% if value is mapping %}
+    [outputs.{{ output.name }}.{{ key }}]
+{% for lv2_key, lv2_value in value.iteritems() %}
+{% if lv2_value is sequence and lv2_value is not string %}
+{% if lv2_value[0] is number %}
+      {{ lv2_key }} = [ {{ lv2_value|join(', ') }} ]
+{% else %}
+      {{ lv2_key }} = [ "{{ lv2_value|join('", "') }}" ]
 {% endif %}
-
-  ## Optional SSL Config
-{% if telegraf_influxdb_ssl_ca is defined and telegraf_influxdb_ssl_ca != None %}
-  # ssl_ca = "{{ telegraf_influxdb_ssl_ca }}"
+{% else %}
+{% if lv2_value == "true" or lv2_value == "false" or lv2_value is number %}
+      {{ lv2_key }} = {{ lv2_value }}
+{% else %}
+      {{ lv2_key }} = "{{ lv2_value }}"
 {% endif %}
-{% if telegraf_influxdb_ssl_cert is defined and telegraf_influxdb_ssl_cert != None %}
-  # ssl_cert = "{{ telegraf_influxdb_ssl_cert }}"
 {% endif %}
-{% if telegraf_influxdb_ssl_key is defined and telegraf_influxdb_ssl_key != None %}
-  # ssl_key = "{{ telegraf_influxdb_ssl_key }}"
+{% endfor %}
 {% endif %}
-
-  ## Use SSL but skip chain & host verification
-{% if telegraf_influxdb_insecure_skip_verify is defined and telegraf_influxdb_insecure_skip_verify != None %}
-  # insecure_skip_verify = telegraf_influxdb_insecure_skip_verify
+{% endfor %}
 {% endif %}
-
-{% endif %}
+{% endfor %}
 
 ###############################################################################
 #                                  PLUGINS                                    #
@@ -206,7 +174,7 @@
 ###############################################################################
 
 ###############################################################################
-#                                  PROCESSORS                                    #
+#                                  PROCESSORS                                 #
 ###############################################################################
 
 {% if telegraf_processors is defined and telegraf_processors is iterable %}
