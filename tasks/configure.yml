@@ -11,6 +11,13 @@
   when: telegraf_aws_tags
   register: ec2_tags
 
+- name: Ensure templatized configuration directory exists
+  file:
+    path: "{{ telegraf_configuration_dir }}"
+    state: directory
+    recurse: yes
+  when: telegraf_template_configuration
+
 - name: Set templatized Telegraf configuration
   template:
     src: telegraf.conf.j2
