@@ -5,10 +5,7 @@
     state: present 
     update_cache: yes 
     cache_valid_time: 3600
-  with_items: >
-    {{ telegraf_debian_ubuntu_dependencies
-       if ansible_distribution_version != '22.04' else
-       telegraf_debian_ubuntu_dependencies_2204 }}
+  with_items: telegraf_debian_ubuntu_dependencies
 
 - name: Install any pip dependencies [Debian/Ubuntu]
   pip:
