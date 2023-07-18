@@ -1,15 +1,10 @@
 ---
 - name: Install any necessary dependencies [Debian/Ubuntu]
   apt: 
-    name: "{{ item }}" 
+    name: "{{ telegraf_debian_ubuntu_dependencies }}"
     state: present 
     update_cache: yes 
     cache_valid_time: 3600
-  with_items:
-    - python-httplib2
-    - python-apt
-    - curl
-    - apt-transport-https
 
 - name: Install any pip dependencies [Debian/Ubuntu]
   pip:

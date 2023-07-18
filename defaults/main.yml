@@ -79,3 +79,18 @@ telegraf_plugins_base:
 telegraf_plugins: "{{ telegraf_plugins_base }} + {{ telegraf_plugins_extra | default([]) }}"
 
 telegraf_influxdata_base_url: "https://repos.influxdata.com"
+
+telegraf_debian_ubuntu_dependencies: >
+  {{ telegraf_debian_ubuntu_dependencies_default
+  if ansible_distribution_version != '22.04' else
+  telegraf_debian_ubuntu_dependencies_2204 }}
+telegraf_debian_ubuntu_dependencies_default:
+  - python-httplib2
+  - python-apt
+  - curl
+  - apt-transport-https
+telegraf_debian_ubuntu_dependencies_2204:
+  - python3-httplib2
+  - python3-apt
+  - curl
+  - apt-transport-https
