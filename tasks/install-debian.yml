@@ -14,17 +14,35 @@
     - ndg-httpsclient
     - pyasn1
 
-- name: Import InfluxData GPG signing key [Debian/Ubuntu]
-  apt_key:
-    url: "{{ telegraf_influxdata_base_url }}/influxdb.key"
-    state: present
-    validate_certs: no
+# Updated 2026-01-08 per https://www.influxdata.com/blog/package-signing-key-rotation/
+# Using /usr/share/keyrings path for compatibility with influxdata-archive-keyring package
+# Note: aiq_packages_pip role may have already configured this, these tasks are idempotent
+
+- name: Create keyrings directory [Debian/Ubuntu]
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: '0755'
+  when: telegraf_install_url is not defined or telegraf_install_url == None
+
+- name: Download InfluxData GPG Key [Debian/Ubuntu]
+  get_url:
+    url: "{{ telegraf_influxdata_base_url }}/influxdata-archive.key"
+    dest: "/tmp/influxdata-archive.key"
+    mode: '0644'
+  when: telegraf_install_url is not defined or telegraf_install_url == None
+
+- name: Convert GPG key to dearmored format and install [Debian/Ubuntu]
+  shell: cat /tmp/influxdata-archive.key | gpg --dearmor > /usr/share/keyrings/influxdata-archive.gpg
+  args:
+    creates: /usr/share/keyrings/influxdata-archive.gpg
   when: telegraf_install_url is not defined or telegraf_install_url == None
 
 - name: Add InfluxData repository [Debian/Ubuntu]
   apt_repository:
-    repo: deb {{ telegraf_influxdata_base_url }}/ubuntu trusty {{ telegraf_install_version }}
+    repo: "deb [signed-by=/usr/share/keyrings/influxdata-archive.gpg] {{ telegraf_influxdata_base_url }}/debian stable main"
     state: present
+    filename: "influxdata"
   when: telegraf_install_url is not defined or telegraf_install_url == None
 
 - name: Install Telegraf packages [Debian/Ubuntu]
